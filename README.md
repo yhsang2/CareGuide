@@ -19,6 +19,7 @@ uvicorn main:app --reload
 
 ### 2) Frontend
 `frontend/index.html` 파일을 브라우저(또는 iOS WebView)에서 여세요.
+
 <img width="440" height="1154" alt="작업 결과01" src="https://github.com/user-attachments/assets/5b70120c-59a9-4878-8e22-4552b04956f6" />
 
 ## 응답 필드
