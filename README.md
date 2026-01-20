@@ -1,34 +1,159 @@
-# 김선생 – AI 증상 리서치, 진료 가이드
-- (Medical Triage PoC)
+CareGuide – Action-Oriented Medical Triage PoC
+==============================================
 
-## 포함 기능
-- Rule-based Triage (규칙 기반) + **Rule weight / confidence score**
+CareGuide is a rule-based, explainable medical triage service that helps users
+decide WHERE to seek care, HOW urgently to act, and WHAT information to prepare,
+based on self-reported symptoms.
 
-- PubMed RAG (PoC용 Mock 데이터) 기반 참고 문헌 노출
-- 모바일 PoC UI (frontend/index.html)
+This project does NOT diagnose diseases.
+It provides symptom pattern recognition, urgency assessment, and evidence-based
+medical guidance suitable for hospital PoCs, internal ventures, and early validation.
 
-## 실행 방법
 
-### 1) Backend
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+Project Philosophy
+------------------
 
-- API 문서: http://127.0.0.1:8000/docs
+CareGuide is intentionally designed around the following principles:
 
-### 2) Frontend
-`frontend/index.html` 파일을 브라우저(또는 iOS WebView)에서 여세요.
+- Diagnosis is NOT the goal
+- Actionable guidance IS the goal
+- Rules come first, AI is optional
+- Every decision must be explainable
+- Medical and legal safety take priority
 
-<img width="440" height="1154" alt="작업 결과01" src="https://github.com/user-attachments/assets/5b70120c-59a9-4878-8e22-4552b04956f6" />
+Instead of predicting diseases, CareGuide identifies
+"clinical symptom patterns" and recommends appropriate next actions.
 
-## 응답 필드
-- `confidence`: 0~1 범위의 **휴리스틱 신뢰 지표** (진단 확률 아님)
-- `confidence_label`: 높음/중간/낮음
-- `rule_id`: 적용된 규칙 ID
-- `evidence`: 키워드 매칭 근거
-- `candidates`: (옵션) 후보 규칙 목록 (의료진 모드에 활용)
 
-## 주의
-본 프로젝트는 의료 진단/처방을 제공하지 않습니다.
+What This Service Does
+----------------------
+
+- Identifies symptom patterns (e.g., right lower quadrant abdominal pain pattern)
+- Estimates urgency level (emergency / urgent / routine / observe)
+- Recommends appropriate departments (e.g., Surgery, ER, Internal Medicine)
+- Provides concrete next actions for users
+- Supplies medical literature references for clinicians
+- Explains why a certain action is recommended
+
+
+What This Service Does NOT Do
+-----------------------------
+
+- Does NOT provide medical diagnosis
+- Does NOT provide treatment or prescriptions
+- Does NOT replace medical professionals
+- Is NOT a certified medical device
+
+
+Key Features
+------------
+
+1. Rule-Based Triage Engine
+   - Explicit medical rules with keyword gating
+   - Confidence scores based on rule weight (NOT probabilities)
+   - Safe, deterministic behavior preferred by hospitals
+
+2. Action-Oriented Output
+   - Urgency level (emergency / urgent / routine / observe)
+   - Clear next actions instead of vague labels
+   - Example:
+     "Right lower quadrant acute abdominal pain pattern
+      – evaluation today is recommended"
+
+3. Pattern-Based Labels (Not Diagnoses)
+   - Uses expressions like:
+     "appendicitis-like pattern" instead of "appendicitis"
+   - Reduces legal and ethical risk
+
+4. Explainability
+   - Shows matched keywords and rule evidence
+   - Rule IDs exposed for audit and clinician review
+   - Candidate rules available for clinician mode
+
+5. PubMed RAG (Research Support)
+   - Retrieves relevant guidelines, reviews, and clinical papers
+   - Used to support reasoning, not to make decisions
+   - Retrieval logic is explainable and rule-aware
+
+6. Mobile-First UI
+   - Optimized for iOS WebView and mobile browsers
+   - Patient mode vs clinician mode separation
+
+
+System Architecture
+-------------------
+
+User Input (Free Text)
+        ↓
+Rule-Based Triage Engine
+        ↓
+Urgency & Action Determination
+        ↓
+Evidence-Aware PubMed Retrieval
+        ↓
+Explainable, Actionable Response
+
+
+Project Structure
+-----------------
+
+medical-llm-poc/
+  backend/
+    main.py                 FastAPI entry point
+    schemas.py              Request / response schemas
+    pubmed_rag.py           Evidence retrieval (RAG-style, PoC)
+    triage/
+      rule_based.py         Rule engine (patterns, urgency, actions)
+      __init__.py
+
+  frontend/
+    index.html              Mobile-first demo UI
+
+  README.txt
+
+
+API Output (Example)
+-------------------
+
+User input:
+"Right lower abdominal pain"
+
+Response:
+- Pattern:
+  "Right lower quadrant acute abdominal pain pattern
+   (possible surgical evaluation needed)"
+
+- Urgency level:
+  urgent
+
+- Recommended departments:
+  Surgery, Emergency Medicine
+
+- Next actions:
+  - Seek surgical or emergency evaluation today
+  - Visit ER immediately if fever, vomiting, worsening pain, or rebound tenderness occur
+  - Prepare symptom timeline for clinician
+
+- Confidence:
+  0.78 (heuristic confidence, NOT diagnostic probability)
+
+- Research basis:
+  Clinical reviews and guidelines related to acute abdominal pain
+
+
+Why Rule-Based First?
+--------------------
+
+Hospitals and medical institutions prefer systems that are:
+
+- Explainable
+- Auditable
+- Deterministic
+- Legally defensible
+
+CareGuide starts with rules to ensure safety and trust.
+AI models (LLMs, embeddings) may later be added ONLY as
+support tools (e.g., symptom normalization), never as final decision-makers.
+
+
+Futur
