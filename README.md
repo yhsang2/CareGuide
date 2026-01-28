@@ -51,8 +51,6 @@ What This Service Does
   - Rule-based decision engine 중심
   - Deterministic logic 우선 설계 (LLM 의존 최소화)
 
----
-
 ### Core Logic
 #### Rule-Based Triage Engine
 - Keyword / symptom pattern matching
@@ -63,8 +61,6 @@ What This Service Does
 - Recommended next action
 - Pattern-based labels (non-diagnostic)
 - Explainable decision output (matched rules exposed)
-
----
 
 ### Retrieval (RAG-style, Optional)
 #### Evidence Retrieval Module
