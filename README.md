@@ -41,6 +41,70 @@ What This Service Does
 - Explains why a certain action is recommended
 
 
+## Project Technical Specification
+
+### Backend
+- **Framework**: FastAPI (Python)
+- **API Style**: RESTful API
+- **Schema Validation**: Pydantic
+- **Architecture Pattern**:
+  - Rule-based decision engine 중심
+  - Deterministic logic 우선 설계 (LLM 의존 최소화)
+
+---
+
+### Core Logic
+#### Rule-Based Triage Engine
+- Keyword / symptom pattern matching
+- Explicit medical rules (if-then, weighted rules)
+
+**Outputs**
+- Urgency level (`emergency / urgent / routine / observe`)
+- Recommended next action
+- Pattern-based labels (non-diagnostic)
+- Explainable decision output (matched rules exposed)
+
+---
+
+### Retrieval (RAG-style, Optional)
+#### Evidence Retrieval Module
+- PubMed 기반 문헌 검색
+- 목적: 판단 보조 및 근거 제시 (Decision-making 아님)
+- Rule 결과를 검색 쿼리로 활용하는 구조
+
+#### RAG Characteristics
+- Retrieval-augmented explanation
+- Deterministic rule output + external evidence reference
+
+---
+
+### Frontend
+- **Type**: Static Web (HTML)
+
+**UI Strategy**
+- Mobile-first
+- Lightweight demo / PoC UI
+
+**Role Separation (Conceptual)**
+- Patient-facing view
+- Clinician / reviewer view
+
+---
+
+### System Characteristics
+- **Decision Strategy**: Rule-first, AI-optional
+- **Explainability**: High (rules, confidence, evidence exposed)
+
+**Safety Design**
+- No diagnosis
+- No treatment or prescription
+- Pattern-based medical language only
+
+**Target Usage**
+- Medical triage PoC
+- Hospital / healthcare decision-support prototype
+
+
 What This Service Does NOT Do
 -----------------------------
 
